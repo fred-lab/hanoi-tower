@@ -1,4 +1,5 @@
 import Desk from "./components/Desk";
+import { BoardProvider } from "./context/BoardContext";
 
 function App() {
   return (
@@ -7,7 +8,9 @@ function App() {
      w-full h-full'
     >
       <h1>Hanoi Towers</h1>
-      <Desk towers={3} />
+      <BoardProvider>
+        <Desk towers={3} />
+      </BoardProvider>
     </section>
   );
 }
