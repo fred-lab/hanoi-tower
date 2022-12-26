@@ -1,4 +1,4 @@
-import { Context, createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
+import { Context, createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 
 export type Tower = number[];
 
@@ -8,6 +8,7 @@ export interface BoardContext {
   move: number;
   step: string;
   start: (quantity: number) => void;
+  reset: () => void;
   updateBoard: (fromTower: number, toTower: number, value: number) => void;
   isValidMove: (position: number, value: number) => boolean;
 }
@@ -62,7 +63,45 @@ export function BoardProvider({ children }: PropsWithChildren) {
     setStep(STEP_PLAY);
   };
 
-  const value = useMemo(() => ({ board, isValidMove, updateBoard, minimumMove, move, step, start }), [board]);
+  const reset = () => {
+    setStep(STEP_START);
+    setBoard([]);
+    setMove(0);
+  };
+
+  const value = useMemo(
+    () => ({ board, isValidMove, updateBoard, minimumMove, move, step, start, reset }),
+    [board, step, move]
+  );
+
+  useEffect(() => {
+    if (board.length > 0 && board[board.length - 1].length > 0 && step === STEP_PLAY) {
+      const towers = board.slice(0, -1);
+
+      if (towers.every((tower) => tower.length === 0)) {
+        console.log(`
+        **************************************************
+        Win !! With ${move} moves out of ${minimumMove} !!
+        **************************************************
+        ~
+        ~ Made by Fred ~
+        ~ https://github.com/fred-lab/hanoi-tower ~
+        ~
+        ~ Like this project ? Buy me a coffee :)
+        ~ https://www.buymeacoffee.com/fredlab ~
+        ~ THX
+        ~
+        ~ See you Space Cowboy !
+        ~
+        **************************************************
+        `);
+
+        setTimeout(() => {
+          setStep(() => STEP_RESULT);
+        }, 500);
+      }
+    }
+  }, [board]);
 
   return <BoardContext.Provider value={value}>{children}</BoardContext.Provider>;
 }

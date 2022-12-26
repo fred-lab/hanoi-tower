@@ -22,8 +22,6 @@ const Tower = ({ position }: ITower) => {
 
   const onDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const value = Number(e.dataTransfer.getData("value"));
-    console.log(position, isValidMove(position, value));
   };
 
   const onDragOver = (e: DragEvent<HTMLDivElement>) => {
