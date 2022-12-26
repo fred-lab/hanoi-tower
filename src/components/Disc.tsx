@@ -28,10 +28,11 @@ const Disc = ({ value, position, isSelectable }: IDisc) => {
       draggable={isSelectable}
       onDragStart={onDragStart}
       style={{
-        width: `${(value + 1) * 3}rem`,
+        width: "100%",
+        maxWidth: `${(value + 1) * 3}rem`,
         pointerEvents: isSelectable ? "auto" : "none",
       }}
-      className={`h-7 ${colors[value - 1]} border border-gray-200 rounded-3xl flex justify-center align-middle z-10 ${
+      className={`h-7 ${colors[value - 1]} border border-gray-500 rounded-3xl flex justify-center align-middle z-10 ${
         isSelectable && "cursor-pointer"
       }`}
     >

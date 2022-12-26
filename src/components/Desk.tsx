@@ -7,7 +7,7 @@ const Desk = ({ towers = 3 }) => {
   const { board } = useBoard();
 
   return (
-    <section className='h-full w-full flex justify-around items-center gap-20'>
+    <section className='w-full flex justify-around items-center gap-20 flex-1'>
       {board.map((_, index: number) => (
         <Tower position={index} key={index} />
       ))}
