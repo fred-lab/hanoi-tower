@@ -6,6 +6,17 @@ export interface IDisc {
 }
 
 const Disc = ({ value, position, isSelectable }: IDisc) => {
+  const colors = [
+    "bg-red-400",
+    "bg-blue-400",
+    "bg-green-400",
+    "bg-orange-400",
+    "bg-pink-400",
+    "bg-cyan-400",
+    "bg-purple-400",
+    "bg-slate-400",
+  ];
+
   const onDragStart = (e: DragEvent<HTMLDivElement>) => {
     // Pass the current tower and the value to the Drag Event
     e.dataTransfer?.setData("value", value.toString());
@@ -16,7 +27,11 @@ const Disc = ({ value, position, isSelectable }: IDisc) => {
     <div
       draggable={isSelectable}
       onDragStart={onDragStart}
-      className={`h-8 w-20 bg-yellow-400 rounded-3xl flex justify-center align-middle z-10 ${
+      style={{
+        width: `${(value + 1) * 3}rem`,
+        pointerEvents: isSelectable ? "auto" : "none",
+      }}
+      className={`h-7 ${colors[value - 1]} border border-gray-200 rounded-3xl flex justify-center align-middle z-10 ${
         isSelectable && "cursor-pointer"
       }`}
     >

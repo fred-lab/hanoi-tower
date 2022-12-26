@@ -2,7 +2,7 @@ import { Context, createContext, PropsWithChildren, useContext, useMemo, useStat
 
 export type Tower = number[];
 
-const initialState: Tower[] = [[1, 2, 3], [], []];
+const initialState: Tower[] = [[1, 2, 3, 4, 5, 6, 7, 8], [], []];
 
 export interface BoardContext {
   board: Tower[];
