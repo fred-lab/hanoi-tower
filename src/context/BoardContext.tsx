@@ -2,23 +2,28 @@ import { Context, createContext, PropsWithChildren, useContext, useMemo, useStat
 
 export type Tower = number[];
 
-const initialState: Tower[] = [[1, 2, 3, 4, 5, 6, 7, 8], [], []];
-
 export interface BoardContext {
   board: Tower[];
-  updateBoard: (fromTower: number, toTower: number, value: number) => void;
-  isValidMove: (position: number, value: number) => boolean;
   minimumMove: number;
   move: number;
+  step: string;
+  start: (quantity: number) => void;
+  updateBoard: (fromTower: number, toTower: number, value: number) => void;
+  isValidMove: (position: number, value: number) => boolean;
 }
 
 const BoardContext = createContext({} as BoardContext);
 
 export const useBoard = () => useContext(BoardContext);
 
+export const STEP_START = "start";
+export const STEP_PLAY = "play";
+export const STEP_RESULT = "result";
+
 export function BoardProvider({ children }: PropsWithChildren) {
-  const [board, setBoard] = useState<Tower[]>(initialState);
+  const [board, setBoard] = useState<Tower[]>([]);
   const [move, setMove] = useState(0);
+  const [step, setStep] = useState(STEP_START);
 
   const isValidMove = (position: number, value: number) => {
     if (board[position].length === 0 || value < board[position][0]) {
@@ -52,7 +57,12 @@ export function BoardProvider({ children }: PropsWithChildren) {
     return Math.pow(2, 3) - 1;
   }, [board]);
 
-  const value = useMemo(() => ({ board, isValidMove, updateBoard, minimumMove, move }), [board]);
+  const start = (quantity: number) => {
+    setBoard(() => [Array.from(Array(quantity).keys(), (i: number) => i + 1), [], []]);
+    setStep(STEP_PLAY);
+  };
+
+  const value = useMemo(() => ({ board, isValidMove, updateBoard, minimumMove, move, step, start }), [board]);
 
   return <BoardContext.Provider value={value}>{children}</BoardContext.Provider>;
 }
