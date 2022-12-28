@@ -90,8 +90,12 @@ export function BoardProvider({ children }: PropsWithChildren) {
    * Get the minimum moves to resolve this game
    */
   const minimumMove = useMemo(() => {
-    return Math.pow(2, 3) - 1;
-  }, [board]);
+    if (step === STEP_PLAY) {
+      const disks = board[0].length;
+      return Math.pow(2, disks) - 1;
+    }
+    return 0;
+  }, [step]);
 
   /**
    * On Start, define a new board with a 'quantity' of disks
