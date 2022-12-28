@@ -21,7 +21,7 @@ const Result = () => {
       <div
         title='Click to start a new game'
         onClick={restart}
-        className='w-80 h-24 border-2 cursor-pointer text-white font-medium text-4xl border-emerald-600 bg-emerald-500 flex justify-center items-center rounded-full'
+        className='w-80 h-24 border-2 cursor-pointer text-white font-medium text-2xl border-emerald-600 bg-emerald-500 flex justify-center items-center rounded-full'
       >
         Play again
       </div>

@@ -9,8 +9,17 @@ export interface BoardContext {
   step: string;
   start: (quantity: number) => void;
   reset: () => void;
-  updateBoard: (fromTower: number, toTower: number, value: number) => void;
-  isValidMove: (position: number, value: number) => boolean;
+  updateBoard: (newPosition: number) => void;
+  isValidMove: (position: number) => boolean;
+  getOriginalPosition: (tower: number, disk: number) => void;
+  originalPosition: DiskPosition;
+  targetTower: number;
+  setTargetTower: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export interface DiskPosition {
+  fromTower: number;
+  disk: number;
 }
 
 const BoardContext = createContext({} as BoardContext);
@@ -24,18 +33,41 @@ export const STEP_RESULT = "result";
 export function BoardProvider({ children }: PropsWithChildren) {
   const [board, setBoard] = useState<Tower[]>([]);
   const [move, setMove] = useState(0);
-  const [step, setStep] = useState(STEP_START);
+  const [step, setStep] = useState<"start" | "play" | "result">(STEP_START);
+  const [originalPosition, setOriginalPosition] = useState<DiskPosition>({
+    fromTower: 0,
+    disk: 1,
+  });
+  const [targetTower, setTargetTower] = useState(-1);
 
-  const isValidMove = (position: number, value: number) => {
-    if (board[position].length === 0 || value < board[position][0]) {
+  /**
+   * Get the original position from where the move start
+   */
+  const getOriginalPosition = (fromTower: number, disk: number) => {
+    setOriginalPosition({
+      fromTower,
+      disk,
+    });
+  };
+
+  /**
+   * Check if the move is authorized
+   */
+  const isValidMove = (toTowerId: number) => {
+    if (board[toTowerId].length === 0 || originalPosition.disk < board[toTowerId][0]) {
       return true;
     }
     return false;
   };
 
-  const updateBoard = (fromTower: number, toTower: number, value: number) => {
-    if (isValidMove(toTower, value) && fromTower !== toTower) {
+  /**
+   * Update the game with the new position of the dragged disk
+   */
+  const updateBoard = (newPosition: number) => {
+    const { fromTower, disk } = originalPosition;
+    if (isValidMove(newPosition) && fromTower !== newPosition) {
       setMove((currentMove) => currentMove + 1);
+      setTargetTower(-1);
       setBoard((currentBoard) =>
         currentBoard.map((tower, index) => {
           // remove the selected disc from the original tower
@@ -45,8 +77,8 @@ export function BoardProvider({ children }: PropsWithChildren) {
           }
 
           // add the selected dis to the destination tower
-          if (toTower === index) {
-            return [value, ...tower];
+          if (newPosition === index) {
+            return [disk, ...tower];
           }
           return tower;
         })
@@ -54,15 +86,24 @@ export function BoardProvider({ children }: PropsWithChildren) {
     }
   };
 
+  /**
+   * Get the minimum moves to resolve this game
+   */
   const minimumMove = useMemo(() => {
     return Math.pow(2, 3) - 1;
   }, [board]);
 
+  /**
+   * On Start, define a new board with a 'quantity' of disks
+   */
   const start = (quantity: number) => {
     setBoard(() => [Array.from(Array(quantity).keys(), (i: number) => i + 1), [], []]);
     setStep(STEP_PLAY);
   };
 
+  /**
+   * Reset the game
+   */
   const reset = () => {
     setStep(STEP_START);
     setBoard([]);
@@ -70,8 +111,21 @@ export function BoardProvider({ children }: PropsWithChildren) {
   };
 
   const value = useMemo(
-    () => ({ board, isValidMove, updateBoard, minimumMove, move, step, start, reset }),
-    [board, step, move]
+    () => ({
+      board,
+      isValidMove,
+      updateBoard,
+      minimumMove,
+      move,
+      step,
+      start,
+      reset,
+      getOriginalPosition,
+      originalPosition,
+      targetTower,
+      setTargetTower,
+    }),
+    [board, step, move, originalPosition, targetTower]
   );
 
   useEffect(() => {

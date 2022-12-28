@@ -1,11 +1,28 @@
 import Desk from "./components/Desk";
 import { BoardProvider } from "./context/BoardContext";
+import { motion } from "framer-motion";
+import { GameIcon } from "./components/Icons";
 
 function App() {
   return (
     <section className='bg-sky-700 w-full h-full flex flex-col'>
       <header className='bg-sky-800 h-20 flex items-center shadow-sm shadow-sky-900'>
-        <h1 className='text-5xl text-blue-100 m-16 '>Tower of Hanoi</h1>
+        <motion.span
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, damping: 6 }}
+          className='ml-8'
+        >
+          <GameIcon className='w-20 h-20 fill-white' />
+        </motion.span>
+        <motion.h1
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 120, damping: 10 }}
+          className='text-5xl text-blue-100 ml-8 '
+        >
+          Tower of Hanoi
+        </motion.h1>
       </header>
       <BoardProvider>
         <Desk />
