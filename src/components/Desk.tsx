@@ -25,20 +25,22 @@ const Desk = () => {
           <Tower position={index} key={index} />
         ))}
       </section>
-      <div className='flex justify-center items-center'>
-        <MoveCounter />
-        <motion.div
-          whileHover={{
-            scale: 1.1,
-          }}
-          transition={{ type: "spring", stiffness: 100, damping: 6 }}
-          onClick={onClick}
-          title='Reset the game'
-          className='w-40 h-8 border-2 cursor-pointer text-white font-medium text-xl border-rose-400 bg-indigo-400 flex justify-center items-center rounded-full'
-        >
-          Reset
-        </motion.div>
-      </div>
+      {step !== STEP_START && (
+        <div className='flex justify-center items-center'>
+          <MoveCounter />
+          <motion.div
+            whileHover={{
+              scale: 1.1,
+            }}
+            transition={{ type: "spring", stiffness: 100, damping: 6 }}
+            onClick={onClick}
+            title='Reset the game'
+            className='w-40 h-8 border-2 cursor-pointer text-white font-medium text-xl border-rose-400 bg-indigo-400 flex justify-center items-center rounded-full'
+          >
+            Reset
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

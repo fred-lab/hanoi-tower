@@ -46,6 +46,9 @@ function App() {
         <a href='https://en.wikipedia.org/wiki/Tower_of_Hanoi' target='_blank'>
           Tower of Hanoi - Wikipedia
         </a>
+        <a href='https://www.buymeacoffee.com/fredlab' target='_blank' className='text-amber-500'>
+          Buy me a coffee
+        </a>
       </footer>
     </section>
   );
